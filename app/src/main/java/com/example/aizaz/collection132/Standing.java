@@ -9,6 +9,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -178,7 +179,8 @@ public class Standing extends AppCompatActivity implements SensorEventListener {
             public void onClick(View v) {
                 if (v.getId() == R.id.btnClearSeries) {
 
-                    txt2.setText("...");
+                    list.clear();
+                    started=false;
 
 
 
@@ -193,13 +195,17 @@ public class Standing extends AppCompatActivity implements SensorEventListener {
         Next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Standing.this,UpStairs.class));
+                Intent intent = new Intent(Standing.this,UpStairs.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
         });
         Previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Standing.this, Sitting.class));
+                Intent intent = new Intent(Standing.this, Sitting.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
         });
 
@@ -214,6 +220,11 @@ public class Standing extends AppCompatActivity implements SensorEventListener {
 
 
 
+    }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_standing, menu);
+        return true;
     }
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -273,7 +284,7 @@ public class Standing extends AppCompatActivity implements SensorEventListener {
             //container.getTimeString()
 
         }
-        String toSpeak = "Its stopped ";
+        String toSpeak = "standing dataset recoding completed";
         Toast.makeText(getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
         t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
 

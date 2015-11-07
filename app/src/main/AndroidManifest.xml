@@ -25,6 +25,13 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
+            android:name=".SubActivity"
+            android:label="GraphView" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="Main" />
+        </activity>
+        <activity
             android:name=".Laying"
             android:label="Laying" >
             <meta-data

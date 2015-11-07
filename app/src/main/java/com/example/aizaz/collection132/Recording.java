@@ -1,6 +1,7 @@
 package com.example.aizaz.collection132;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -8,6 +9,8 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -67,7 +70,7 @@ public class Recording extends AppCompatActivity implements SensorEventListener 
 
     StringBuffer buff = new StringBuffer();
     StringBuffer buff2 = new StringBuffer();
-
+    String nameStr=new String();
 
     @SuppressLint("SdCardPath")protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,29 +84,7 @@ public class Recording extends AppCompatActivity implements SensorEventListener 
         btnStartTemplate=(Button) findViewById(R.id.btnStartTemplate);
 
         FileName= (EditText) findViewById(R.id.edit);
-        filename= FileName.toString();
 
-        String nameStr = new String("/storage/sdcard0/" + filename + ".csv");
-        txt2.setText(nameStr);
-
-        t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if(status != TextToSpeech.ERROR) {
-                    t1.setLanguage(Locale.US);
-                }
-            }
-        });
-
-        File outputFile = new File(nameStr);
-        mCurrentFile = null;
-
-        try {
-            mCurrentFile = new PrintWriter(new FileOutputStream(outputFile));
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         sensorManager= (SensorManager) getSystemService(SENSOR_SERVICE);
         Accelerometer=sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
@@ -126,6 +107,32 @@ public class Recording extends AppCompatActivity implements SensorEventListener 
                 if(v.getId() == R.id.btnStartTemplate){
 
                     list.clear();
+                    filename= FileName.getText().toString();
+
+                    nameStr = new String("/storage/sdcard0/" + filename + ".csv");
+
+                    t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+                        @Override
+                        public void onInit(int status) {
+                            if(status != TextToSpeech.ERROR) {
+                                t1.setLanguage(Locale.US);
+                            }
+                        }
+                    });
+
+                    File outputFile = new File(nameStr);
+                    mCurrentFile = null;
+
+                    try {
+                        mCurrentFile = new PrintWriter(new FileOutputStream(outputFile));
+                    } catch (FileNotFoundException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    txt2.setText("File Name is "+filename+".csv");
+                    String ToSpeak = "Recording Starting in 5 seconds";
+                    Toast.makeText(getApplicationContext(), ToSpeak, Toast.LENGTH_LONG).show();
+                    t1.speak(ToSpeak, TextToSpeech.QUEUE_FLUSH, null);
 
                     new java.util.Timer().schedule(
 
@@ -156,21 +163,6 @@ public class Recording extends AppCompatActivity implements SensorEventListener 
 
 
 
-                btnClearSeries.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (v.getId() == R.id.btnClearSeries) {
-
-                            txt2.setText("...");
-
-
-
-                        }
-
-
-                    }
-                });
-
 
 
 
@@ -178,7 +170,53 @@ public class Recording extends AppCompatActivity implements SensorEventListener 
 
             }
         });
+        btnClearSeries.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (v.getId() == R.id.btnClearSeries) {
+
+                    list.clear();
+                    started=false;
+
+
+
+
+                }
+
+
+            }
+        });
     }
+    protected void onPause() {
+        super.onPause();
+
+        if(mCurrentFile!=null) {
+            mCurrentFile.close();
+        }
+
+
+
+    }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_recording, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            startActivity(new Intent(this, SubActivity.class));
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         if(started) {
@@ -192,7 +230,7 @@ public class Recording extends AppCompatActivity implements SensorEventListener 
                 TimeDataContainer container = new TimeDataContainer(time,x,y,z);
                 list.add(container);
                 txt.setText("S.Pt"+list.size());
-                if(list.size()==300){
+                if(list.size()==2701){
                     started=false;
                     store();
                 }
@@ -202,8 +240,13 @@ public class Recording extends AppCompatActivity implements SensorEventListener 
 
         }
 
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
     public void store() {
         int i = 0;
 
@@ -225,21 +268,16 @@ public class Recording extends AppCompatActivity implements SensorEventListener 
             mCurrentFile.println(buff.toString());
 
 
-            txt2.setText("TemplateFileSaved");
+            txt2.setText("Downstairs Saved");
 
             i++;
             //container.getTimeString()
 
         }
-        String toSpeak = "Its stopped ";
+        String toSpeak = "Its stopped";
         Toast.makeText(getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
         t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
 
-
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
 }

@@ -9,6 +9,8 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -183,7 +185,9 @@ public class Sitting extends AppCompatActivity implements SensorEventListener {
             public void onClick(View v) {
                 if (v.getId() == R.id.btnClearSeries) {
 
-                    txt2.setText("...");
+                    list.clear();
+                    started=false;
+
 
 
 
@@ -196,13 +200,17 @@ public class Sitting extends AppCompatActivity implements SensorEventListener {
         Next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Sitting.this,Standing.class));
+                Intent intent = new Intent(Sitting.this,Standing.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
         });
         Previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Sitting.this, Laying.class));
+                Intent intent = new Intent(Sitting.this,Laying.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
         });
 
@@ -215,6 +223,11 @@ public class Sitting extends AppCompatActivity implements SensorEventListener {
 
 
 
+    }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_sitting, menu);
+        return true;
     }
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -245,6 +258,21 @@ public class Sitting extends AppCompatActivity implements SensorEventListener {
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            startActivity(new Intent(this, SubActivity.class));
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     public void store() {
         int i = 0;
@@ -273,7 +301,7 @@ public class Sitting extends AppCompatActivity implements SensorEventListener {
             //container.getTimeString()
 
         }
-        String toSpeak = "Its stopped ";
+        String toSpeak = "Sitting dataset recoding completed";
         Toast.makeText(getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
         t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
 

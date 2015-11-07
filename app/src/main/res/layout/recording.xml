@@ -27,7 +27,6 @@
             android:paddingLeft="10px"
             android:paddingRight="10px"
             android:paddingTop="20px"
-            android:text="Hello"
             android:layout_weight="0.16"
             android:id="@+id/text"
             android:gravity="center" />
@@ -45,11 +44,10 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:paddingLeft="330px"
             android:paddingTop="20px"
-            android:text="..."
             android:layout_weight="0.16"
-            android:id="@+id/textView" />
+            android:id="@+id/textView"
+            android:gravity="center" />
 
     </LinearLayout>
     <LinearLayout
@@ -62,11 +60,10 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:paddingLeft="330px"
-            android:paddingTop="20px"
             android:text="Enter Activity Name"
             android:layout_weight="0.16"
-            android:id="@+id/edit" />
+            android:id="@+id/edit"
+            android:gravity="center" />
 
     </LinearLayout>
 

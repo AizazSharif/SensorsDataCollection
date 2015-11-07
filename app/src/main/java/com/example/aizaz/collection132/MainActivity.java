@@ -3,6 +3,8 @@ package com.example.aizaz.collection132;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +17,7 @@ public class MainActivity extends AppCompatActivity{
 
     Button Auto,Man;
 
+    FloatingActionButton fab;
     private android.support.v7.widget.Toolbar toolbar;
 
 
@@ -25,6 +28,14 @@ public class MainActivity extends AppCompatActivity{
         toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
 
+        fab= (FloatingActionButton) findViewById(R.id.fab);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Hello Snackbar", Snackbar.LENGTH_LONG).show();
+            }
+        });
 
 
         Auto= (Button) findViewById(R.id.btnStartTemplate);
@@ -33,14 +44,20 @@ public class MainActivity extends AppCompatActivity{
         Auto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this,Walking.class));
+                Snackbar.make(v,"hey",Snackbar.LENGTH_LONG).setAction("Action", null)
+                        .show();
+                Intent intent = new Intent(MainActivity.this,Walking.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
         });
 
         Man.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this,Recording.class));
+                Intent intent = new Intent(MainActivity.this,Recording.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
         });
 
@@ -62,7 +79,7 @@ public class MainActivity extends AppCompatActivity{
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            startActivity(new Intent(this, SubActivity.class));
         }
 
         return super.onOptionsItemSelected(item);

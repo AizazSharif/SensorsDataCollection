@@ -9,6 +9,8 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -182,7 +184,8 @@ public class Walking extends AppCompatActivity implements SensorEventListener {
             public void onClick(View v) {
                 if (v.getId() == R.id.btnClearSeries) {
 
-                    txt2.setText("...");
+                    list.clear();
+                    started=false;
 
 
 
@@ -194,13 +197,18 @@ public class Walking extends AppCompatActivity implements SensorEventListener {
         Next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(),Laying.class));
+                Intent intent = new Intent(getBaseContext(),Laying.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+
             }
         });
         Previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(), MainActivity.class));
+                Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
         });
 
@@ -215,6 +223,26 @@ public class Walking extends AppCompatActivity implements SensorEventListener {
 
     }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_walking, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            startActivity(new Intent(this, SubActivity.class));
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 
     @Override
@@ -278,9 +306,10 @@ public class Walking extends AppCompatActivity implements SensorEventListener {
             //container.getTimeString()
 
         }
-        String toSpeak = "Its stopped";
+        String toSpeak = "walking dataset recoding completed";
         Toast.makeText(getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
         t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+
 
 
     }

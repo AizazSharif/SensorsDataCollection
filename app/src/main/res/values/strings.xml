@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">DataCollection</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Graph Plot</string>
+    <string name="Next">Next</string>
+    <string name="next">next</string>
+    <string name="wao">WWW</string>
 </resources>
